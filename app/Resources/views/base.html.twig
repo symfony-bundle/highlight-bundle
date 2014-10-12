@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ app.request.locale }}"
+      lang="{{ app.request.locale }}" dir="{% block direction %}ltr{% endblock direction %}">
+<head>
+    {% block head %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="{{ _charset }}"/>
+        {% block stylesheets %}
+            {% stylesheets filter='cssrewrite'
+            'bundles/bootstrap/css/bootstrap.css'
+            'bundles/highlight-extra/css/manni.css'
+            'css/docs.css' %}
+            <link rel="stylesheet" type="text/css" href="{{ asset_url }}">
+            {% endstylesheets %}
+        {% endblock stylesheets %}
+        {% block javascripts %}
+            {% javascripts
+            'bundles/jquery/js/jquery.min.js'
+            'bundles/bootstrap/js/bootstrap.min.js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endblock javascripts %}
+        <title>{% block pageTitle %}{% endblock pageTitle %} - Anezi.net</title>
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}"/>
+    {% endblock head %}
+</head>
+<body {% block body_attributes %}{% endblock body_attributes %}>
+{% block body %}
+    <div class="container">
+        {% block content %}
+            <div class="row">
+                <div class="col-sm-12">
+                    {% block main %}
+                        {% block mainContentOfPage %}{% endblock %}
+                    {% endblock main %}
+                </div>
+            </div>
+        {% endblock content %}
+    </div>
+{% endblock body %}
+{% block body_extra %}
+{% endblock body_extra %}
+</body>
+</html>

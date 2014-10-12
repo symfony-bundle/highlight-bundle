@@ -1,0 +1,6 @@
+services:
+    highlight.twig.highlight_extension:
+        class: Anezi\Bundle\HighlightBundle\Twig\HighlightExtension
+        tags:
+            - { name: twig.extension }
+        arguments: [ @kernel ]

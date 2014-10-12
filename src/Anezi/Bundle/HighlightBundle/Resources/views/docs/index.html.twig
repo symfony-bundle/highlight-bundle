@@ -1,0 +1,254 @@
+{% extends "::base.html.twig" %}
+{% block mainContentOfPage %}
+
+    <h1 class="page-header">
+        Highlight Bundle for Symfony
+    </h1>
+
+    <p>Allows code highlights with Pygments in Symfony2 projects.</p>
+
+    <h2>1. Installation</h2>
+
+    <h3>1.1 System requirements</h3>
+
+    <p>
+        This bundle requires <code>pygments/pygments</code> to work,
+        and it will be installed automatically. But the last one needs
+        <code>pygmentize</code> to be installed in your system, and you
+        have to do it by your self. Use this command (for Ubuntu):
+    </p>
+
+    {{ highlight('$ sudo apt-get install python-pygments', 'bash') }}
+
+    <h3>1.2 Composer requirements</h3>
+
+    <p>Add bundle to your composer.json file</p>
+
+    {% highlight json %}
+{
+    "require": {
+        "symfony-bundle/highlight-bundle": "1.0.*"
+    }
+}
+    {% endhighlight %}
+
+    <h3>1.3 Extra assets</h3>
+
+    <p>
+        Extra assets are the assets that will be generated from <b>Pygmetize</b>
+        command and will be installed in the web folder.
+    </p>
+
+    <p>
+        Add this line
+        <code>Anezi\\Bundle\\HighlightBundle\\Composer\\ScriptHandler\\installExtraAssets</code>
+        in <code>post-install-cmd</code> and <code>post-update-cmd</code>
+        sections of your composer.json. It will looks like:
+    </p>
+
+    {% highlight composer %}
+{
+    "scripts": {
+        "post-install-cmd": [
+            "Anezi\\Bundle\\HighlightBundle\\Composer\\ScriptHandler\\installExtraAssets"
+        ],
+        "post-update-cmd": [
+            "Anezi\\Bundle\\HighlightBundle\\Composer\\ScriptHandler\\installExtraAssets"
+        ]
+    }
+}
+    {% endhighlight %}
+
+    <h3>1.4 Bundle activation</h3>
+
+    <p>
+        Add bundle to your application kernel
+    </p>
+
+    {% highlight php %}
+<?php
+// app/AppKernel.php
+
+public function registerBundles()
+{
+    $bundles = array(
+    // ...
+    new Anezi\Bundle\HighlightBundle\HighlightBundle(),
+    // ...
+    );
+}
+?>{% endhighlight %}
+
+    <h3>1.5 Project update</h3>
+
+    {{ '$ composer update'|highlight('bash') }}
+
+    <h2>2. Usage</h2>
+
+    <h3>2.1 Stylesheets</h3>
+
+    <p>Pygmentize offers several styles: </p>
+
+    <p>autumn, borland, bw, colorful, default, friendly, fruity, manni, monokai, murphy,
+    native, pastie, perldoc, rrt, tango, vim, vs.</p>
+
+    <p>
+        For example, to use the <code>manni</code> style, insert this line in your twig file:
+    </p>
+
+    {% highlight htmltwig %}
+<link rel="stylesheet" type="text/css" href="{{ "{{ asset('bundles/highlight-extra/css/manni.css') }}" }}">
+    {% endhighlight %}
+
+    <h3>2.2 Highlights</h3>
+
+    <p>
+        There are tree methods to highlight a code:
+    </p>
+
+    <h4>2.2.1 Using tag:</h4>
+
+    <p><b>Canvas:</b></p>
+    {% highlight twig %}
+{{ '{% highlight lexer %}
+Source code
+{% endhighlight %}' }}
+{% endhighlight %}
+
+    <p><b>Example:</b></p>
+    {% highlight twig %}{% verbatim %}
+{% highlight json %}
+{
+    "require": {
+        "symfony-bundle/highlight-bundle": "1.0.*"
+    }
+}
+{% endhighlight %}
+{% endverbatim %}{% endhighlight %}
+
+    <p><b>Results:</b></p>
+
+        {% highlight json %}
+{
+    "require": {
+        "symfony-bundle/highlight-bundle": "1.0.*"
+    }
+}
+        {% endhighlight %}
+
+    <h4>2.2.2 Using filter:</h4>
+
+    <p><b>Canvas:</b></p>
+
+    {% highlight twig %}{% verbatim %}
+{{ 'Source code'|highlight('lexer') }}
+{% endverbatim %}{% endhighlight %}
+
+    <p><b>Example:</b></p>
+
+{% highlight twig %}{% verbatim %}
+{{ '$ composer update'|highlight('bash') }}
+{% endverbatim %}{% endhighlight %}
+
+    <p><b>Results:</b></p>
+
+    {{ '$ composer update'|highlight('bash') }}
+
+    <h4>2.2.3 Using function:</h4>
+
+    <p><b>Canvas:</b></p>
+
+    {% highlight twig %}{% verbatim %}
+{{ highlight('Source code', 'lexer') }}
+{% endverbatim %}{% endhighlight %}
+
+    <p><b>Example:</b></p>
+
+    {% highlight twig %}{% verbatim %}
+{{ highlight('$ sudo apt-get install python-pygments', 'bash') }}
+{% endverbatim %}{% endhighlight %}
+
+    <p><b>Results:</b></p>
+
+    {{ highlight('$ sudo apt-get install python-pygments', 'bash') }}
+
+    <p>
+        For more examples, <a href="https://github.com/symfony-bundle/highlight-bundle/blob/master/src/Anezi/Bundle/HighlightBundle/Resources/views/docs/index.html.twig"
+                             title="Source code of this page" target="_new">see on gihub how this page is made</a>.
+    </p>
+
+    <h3>2.3 Available lexers</h3>
+
+    <table class="table table-bordered table-striped">
+        <tbody>
+        {% for lexer, lexer_name in lexers %}
+            <tr>
+                <td><code>{{ lexer }}</code></td><td>{{ lexer_name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>2.4 Documentation route</h3>
+
+    <p>
+        You can add this documentation in your web site by adding
+        the follow route in <code>routing.yml</code>:
+    </p>
+
+    {% highlight yaml %}
+highlight:
+    resource: "@HighlightBundle/Resources/config/routing.yml"
+    prefix:   /docs/highlight
+    {% endhighlight %}
+
+    <h2>3. Contributions</h2>
+
+    <p>
+        You can fork this bundle and run it locally as a standalone
+        symfony application.
+    </p>
+
+    <p>
+        Then install requirements by using this command:
+    </p>
+
+    {{ '$ composer install'|highlight('bash') }}
+
+    <p>
+        Check your environment, then run the server with this command:
+    </p>
+
+    {{ '$ php app/console server:run'|highlight('bash') }}
+
+    <p>
+        Open <code>127.0.0.1:8000</code> in your browser.
+    </p>
+
+    <p>Your contributions are welcome.</p>
+
+    <h2>4. License</h2>
+
+    <p>The MIT License (MIT)</p>
+
+    <p>Copyright (c) 2014 Hassan Amouhzi</p>
+
+    <p>Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:</p>
+
+    <p>The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.</p>
+
+    <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.</p>
+
+{% endblock mainContentOfPage %}
